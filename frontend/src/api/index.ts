@@ -10,7 +10,10 @@ const instance = axios.create({
 const api: Api = {
   user: {
     signup: (data) => instance.post("user/signup", data),
-    login: (data) => instance.post("user/login", data),
+    login: async (data) => {
+      const res = await instance.post("user/login", data);
+      return res.data;
+    },
     getProfile: (token) =>
       instance.post("user/profile", null, {
         headers: {

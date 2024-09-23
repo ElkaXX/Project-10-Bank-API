@@ -1,7 +1,28 @@
 import "../css/main.css";
 import BankLogo from "../assets/argentBankLogo.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { useState } from "react";
+import { login } from "../store/authSlice";
 function SignIn() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const authenticationState = useSelector(
+    (state: RootState) => state.authentication
+  );
+  const dispatch: AppDispatch = useDispatch();
+  console.log(authenticationState, "auth state");
+
+  const handleLogin = async () => {
+    await dispatch(login({ email: username, password }));
+  };
+
+  if (authenticationState.isAuthorized) {
+    return <Navigate replace to={"/home"} />;
+  }
+
   return (
     <>
       <nav className="main-nav">
@@ -27,19 +48,35 @@ function SignIn() {
           <form>
             <div className="input-wrapper">
               <label>Username</label>
-              <input type="text" id="username" />
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
             <div className="input-wrapper">
               <label>Password</label>
-              <input type="password" id="password" />
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <div className="input-remember">
               <input type="checkbox" id="remember-me" />
               <label>Remember me</label>
             </div>
-            <Link className="sign-in-button" to="/home">
+            <button
+              className="sign-in-button"
+              onClick={(e) => {
+                e.preventDefault();
+                handleLogin();
+              }}
+            >
               Sign In
-            </Link>
+            </button>
           </form>
         </section>
       </main>

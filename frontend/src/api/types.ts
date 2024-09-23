@@ -16,7 +16,11 @@ export interface Api {
       lastName: string;
     }) => Promise<ServerResponse>;
     login: (data: { email: string; password: string }) => Promise<{
-      token: string;
+      status: number;
+      message: string;
+      body: {
+        token: string;
+      };
     }>;
     getProfile: (token: string) => Promise<ServerResponse>;
     editProfile: (
