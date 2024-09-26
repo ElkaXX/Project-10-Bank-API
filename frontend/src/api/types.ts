@@ -7,6 +7,15 @@ interface ServerResponse {
   };
 }
 
+interface ProfileData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+}
+
 export interface Api {
   user: {
     signup: (data: {
@@ -22,7 +31,7 @@ export interface Api {
         token: string;
       };
     }>;
-    getProfile: (token: string) => Promise<ServerResponse>;
+    getProfile: (token: string) => Promise<ProfileData>;
     editProfile: (
       data: { firstName: string; lastName: string },
       token: string

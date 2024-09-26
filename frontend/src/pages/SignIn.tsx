@@ -13,7 +13,6 @@ function SignIn() {
     (state: RootState) => state.authentication
   );
   const dispatch: AppDispatch = useDispatch();
-  console.log(authenticationState, "auth state");
 
   const handleLogin = async () => {
     await dispatch(login({ email: username, password }));
@@ -35,10 +34,10 @@ function SignIn() {
           <h1 className="sr-only">Argent Bank</h1>
         </Link>
         <div>
-          <a className="main-nav-item" href="./sign-in.html">
+          <Link className="main-nav-logo" to="/sign-in">
             <i className="fa fa-user-circle"></i>
             Sign In
-          </a>
+          </Link>
         </div>
       </nav>
       <main className="main bg-dark">

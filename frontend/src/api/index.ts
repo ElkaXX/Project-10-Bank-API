@@ -14,12 +14,14 @@ const api: Api = {
       const res = await instance.post("user/login", data);
       return res.data;
     },
-    getProfile: (token) =>
-      instance.post("user/profile", null, {
+    getProfile: async (token) => {
+      const res = await instance.post("user/profile", null, {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
-      }),
+      });
+      return res.data.body;
+    },
     editProfile: (data, token) =>
       instance.put("user/profil", data, { headers: { Authorization: token } }),
   },

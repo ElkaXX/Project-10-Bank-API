@@ -1,6 +1,33 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import BankLogo from "../assets/argentBankLogo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { useEffect, useState } from "react";
+import api from "../api";
+import { signOut } from "../store/authSlice";
+
 function Home() {
+  const dispatch: AppDispatch = useDispatch();
+  const { token, isAuthorized } = useSelector(
+    (state: RootState) => state.authentication
+  );
+  const [firstName, setFirstname] = useState("");
+  const [lastName, setLastname] = useState("");
+
+  const getProfile = async () => {
+    const { firstName, lastName } = await api.user.getProfile(token!);
+    setFirstname(firstName);
+    setLastname(lastName);
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  if (!isAuthorized) {
+    return <Navigate replace to="/sign-in" />;
+  }
+
   return (
     <>
       <nav className="main-nav">
@@ -15,12 +42,12 @@ function Home() {
         <div>
           <Link className="main-nav-item" to="/home">
             <i className="fa fa-user-circle"></i>
-            Tony
+            {firstName}
           </Link>
-          <Link className="main-nav-item" to="/">
+          <a className="main-nav-item" onClick={() => dispatch(signOut())}>
             <i className="fa fa-sign-out"></i>
             Sign Out
-          </Link>
+          </a>
         </div>
       </nav>
       <main className="main bg-dark">
@@ -28,7 +55,7 @@ function Home() {
           <h1>
             Welcome back
             <br />
-            Tony Jarvis!
+            {`${firstName} ${lastName}!`}
           </h1>
           <button className="edit-button">Edit Name</button>
         </div>
