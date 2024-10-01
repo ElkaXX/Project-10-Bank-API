@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { useState } from "react";
 import { login } from "../store/authSlice";
+import "../css/sign-in.css";
 function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +20,7 @@ function SignIn() {
   };
 
   if (authenticationState.isAuthorized) {
-    return <Navigate replace to={"/home"} />;
+    return <Navigate replace to={"/profile"} />;
   }
 
   return (
@@ -63,6 +64,9 @@ function SignIn() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {authenticationState.error && (
+              <div className="error">{authenticationState.error}</div>
+            )}
             <div className="input-remember">
               <input type="checkbox" id="remember-me" />
               <label>Remember me</label>

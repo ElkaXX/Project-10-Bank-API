@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import api from "../api";
+import { AxiosError } from "axios";
+
+interface ServerError {
+  message: string;
+  status: number;
+}
 
 export interface AuthenticationState {
   isLoading: boolean;
@@ -18,16 +24,24 @@ const initialState: AuthenticationState = {
   isAuthorized: false,
 };
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }: { email: string; password: string }) => {
+export const login = createAsyncThunk<
+  { token: string },
+  { email: string; password: string },
+  { rejectValue: { message: string } }
+>("auth/login", async ({ email, password }, { rejectWithValue }) => {
+  try {
     const {
       body: { token },
     } = await api.user.login({ email, password });
 
     return { token: token };
+  } catch (error) {
+    const message =
+      (error as AxiosError<ServerError>).response?.data.message || "Error";
+
+    return rejectWithValue({ message });
   }
-);
+});
 
 export const authenticationSlice = createSlice({
   name: "authentication",
@@ -48,8 +62,8 @@ export const authenticationSlice = createSlice({
           state.token = action.payload.token;
         }
       )
-      .addCase(login.rejected, (state) => {
-        state.error = "error";
+      .addCase(login.rejected, (state, action) => {
+        state.error = action.payload?.message;
       });
   },
 });

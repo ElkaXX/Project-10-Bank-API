@@ -1,7 +1,10 @@
 import App from "./App.tsx";
-import Home from "./pages/Home.tsx";
+import Profile from "./pages/Profile.tsx";
 import SignIn from "./pages/SignIn.tsx";
 import { createBrowserRouter } from "react-router-dom";
+import Transactions from "./pages/Transactions.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import AuthGuard from "./components/AuthGuard.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -13,7 +16,23 @@ export const router = createBrowserRouter([
     element: <SignIn />,
   },
   {
-    path: "/home",
-    element: <Home />,
+    path: "/profile",
+    element: (
+      <AuthGuard>
+        <Profile />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/transactions",
+    element: (
+      <AuthGuard>
+        <Transactions />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
