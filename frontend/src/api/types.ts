@@ -31,10 +31,10 @@ export interface Api {
         token: string;
       };
     }>;
-    getProfile: (token: string) => Promise<ProfileData>;
-    editProfile: (
-      data: { firstName: string; lastName: string },
-      token: string
-    ) => Promise<ServerResponse>;
+    getProfile: () => Promise<ProfileData>;
+    editProfile: (data: {
+      firstName: string;
+      lastName: string;
+    }) => Promise<ServerResponse>;
   };
 }

@@ -1,35 +1,38 @@
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 import { useEffect, useState } from "react";
-import api from "../api";
 import Layout from "../components/Layout";
 import "../css/profile.css";
+import { editUserProfile, getUserProfile } from "../store/userSlice";
 
 function Profile() {
-  const { token } = useSelector((state: RootState) => state.authentication);
   const navigate = useNavigate();
-  const [firstName, setFirstname] = useState("");
-  const [lastName, setLastname] = useState("");
+  const dispatch: AppDispatch = useDispatch();
+
+  const { firstName, lastName } = useSelector((state: RootState) => state.user);
+
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [editedFirstName, setEditedFirstname] = useState("");
+  const [editedLastName, setEditedLastname] = useState("");
 
   const handleSave = () => {
+    dispatch(
+      editUserProfile({
+        firstName: editedFirstName,
+        lastName: editedLastName,
+      })
+    );
     setEditMode(false);
   };
 
-  const handleCancel = () => {
+  const handleCancelEdit = () => {
     setEditMode(false);
-  };
-
-  const getProfile = async () => {
-    const { firstName, lastName } = await api.user.getProfile(token!);
-    setFirstname(firstName);
-    setLastname(lastName);
   };
 
   useEffect(() => {
-    getProfile();
-  }, []);
+    dispatch(getUserProfile());
+  }, [dispatch]);
 
   return (
     <Layout>
@@ -44,21 +47,28 @@ function Profile() {
             <div className="edit-name">
               <input
                 type="text"
-                value={firstName}
-                onChange={(e) => setFirstname(e.target.value)}
+                value={editedFirstName}
+                onChange={(e) => setEditedFirstname(e.target.value)}
               />
               <input
                 type="text"
-                value={lastName}
-                onChange={(e) => setLastname(e.target.value)}
+                value={editedLastName}
+                onChange={(e) => setEditedLastname(e.target.value)}
               />
               <button onClick={handleSave}>Save</button>
-              <button onClick={handleCancel}>Cancel</button>
+              <button onClick={handleCancelEdit}>Cancel</button>
             </div>
           ) : (
             <>
               <h1> {`${firstName} ${lastName}!`}</h1>
-              <button className="edit-button" onClick={() => setEditMode(true)}>
+              <button
+                className="edit-button"
+                onClick={() => {
+                  setEditedFirstname(firstName);
+                  setEditedLastname(lastName);
+                  setEditMode(true);
+                }}
+              >
                 Edit Name
               </button>
             </>

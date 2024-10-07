@@ -9,7 +9,7 @@ const AuthGuard: FC<{ children: ReactElement }> = ({ children }) => {
   );
 
   if (!isAuthorized) {
-    return <Navigate replace to="/" />;
+    return <Navigate replace to="/sign-in" />;
   }
 
   return children;

@@ -1,17 +1,21 @@
 import { FC, ReactElement } from "react";
 import { Link } from "react-router-dom";
 import BankLogo from "../assets/argentBankLogo.png";
-import { AppDispatch } from "../store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
 import { signOut } from "../store/authSlice";
 
 const Layout: FC<{ children: ReactElement }> = ({ children }) => {
   const dispatch: AppDispatch = useDispatch();
+  const { firstName } = useSelector((state: RootState) => state.user);
+  const { isAuthorized } = useSelector(
+    (state: RootState) => state.authentication
+  );
 
   return (
     <>
       <nav className="main-nav">
-        <Link className="main-nav-logo" to="/">
+        <Link className="main-nav-logo" to={isAuthorized ? "/profile" : "/"}>
           <img
             className="main-nav-logo-image"
             src={BankLogo}
@@ -22,7 +26,7 @@ const Layout: FC<{ children: ReactElement }> = ({ children }) => {
         <div>
           <Link className="main-nav-item" to="/profile">
             <i className="fa fa-user-circle"></i>
-            'firstName'
+            {firstName}
           </Link>
           <a className="main-nav-item" onClick={() => dispatch(signOut())}>
             <i className="fa fa-sign-out"></i>

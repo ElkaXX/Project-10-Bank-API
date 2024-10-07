@@ -59,7 +59,7 @@ export const authenticationSlice = createSlice({
         (state, action: PayloadAction<{ token: string }>) => {
           state.isLoading = false;
           state.isAuthorized = true;
-          state.token = action.payload.token;
+          state.token = `Bearer ${action.payload.token}`;
         }
       )
       .addCase(login.rejected, (state, action) => {
