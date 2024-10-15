@@ -355,24 +355,6 @@ definitions:
   TransactionInput:
     type: object
     properties:
-      amount:
-        type: number
-        format: float
-        example: 100.5
-      balance:
-        type: number
-        format: float
-        example: 2147.79
-      description:
-        type: string
-        example: "Grocery shopping"
-      date:
-        type: string
-        format: date-time
-        example: "2024-10-06T13:45:30Z"
-      transactionType:
-        type: string
-        example: "Electronic"
       category:
         type: string
         example: "Food"
