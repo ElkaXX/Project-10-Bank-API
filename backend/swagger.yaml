@@ -73,6 +73,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
       produces:
         - application/json
       responses:
@@ -97,6 +98,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: body
           name: body
           description: Update user profile attributes
@@ -115,10 +117,12 @@ paths:
         "500":
           description: Internal Server Error
 
-  /transactions:
+  /user/transactions:
     get:
+      security:
+        - Bearer: []
       tags:
-        - Transactions Module
+        - Transactions Modules
       summary: Get all user transactions for the current month
       description: Returns all transactions for the current month, grouped by account.
       parameters:
@@ -126,6 +130,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: query
           name: userId
           description: ID of the user to retrieve transactions for
@@ -159,10 +164,12 @@ paths:
         "500":
           description: Internal Server Error
 
-  /transactions/{transactionId}:
+  /user/transactions/{transactionId}:
     get:
+      security:
+        - Bearer: []
       tags:
-        - Transactions Module
+        - Transactions Modules
       summary: Get details of a specific transaction
       description: Retrieves detailed information about a specific transaction by its ID.
       parameters:
@@ -170,6 +177,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction to retrieve
@@ -187,9 +195,11 @@ paths:
         "500":
           description: Internal Server Error
 
-    put:
+    patch:
+      security:
+        - Bearer: []
       tags:
-        - Transactions Module
+        - Transactions Modules
       summary: Update a transaction
       description: Modify an existing transaction.
       parameters:
@@ -197,6 +207,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction to update
@@ -223,8 +234,10 @@ paths:
           description: Internal Server Error
 
     delete:
+      security:
+        - Bearer: []
       tags:
-        - Transactions Module
+        - Transactions Modules
       summary: Delete a transaction
       description: Deletes an existing transaction by ID.
       parameters:
@@ -232,6 +245,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction to delete
@@ -313,16 +327,14 @@ definitions:
       id:
         type: string
         example: "5f8d0d55b54764421b7156b8"
-      accountId:
-        type: string
-        example: "12345"
       amount:
         type: number
         format: float
         example: 100.5
-      currency:
-        type: string
-        example: "USD"
+      balance:
+        type: number
+        format: float
+        example: 1000
       description:
         type: string
         example: "Grocery shopping"
@@ -330,20 +342,27 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-06T13:45:30Z"
+      transactionType:
+        type: string
+        example: "Electronic"
+      category:
+        type: string
+        example: "Food"
+      notes:
+        type: string
+        example: ""
 
   TransactionInput:
     type: object
     properties:
-      accountId:
-        type: string
-        example: "12345"
       amount:
         type: number
         format: float
         example: 100.5
-      currency:
-        type: string
-        example: "USD"
+      balance:
+        type: number
+        format: float
+        example: 2147.79
       description:
         type: string
         example: "Grocery shopping"
@@ -351,3 +370,12 @@ definitions:
         type: string
         format: date-time
         example: "2024-10-06T13:45:30Z"
+      transactionType:
+        type: string
+        example: "Electronic"
+      category:
+        type: string
+        example: "Food"
+      notes:
+        type: string
+        example: ""

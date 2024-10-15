@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import api from "../api";
 import { AxiosError } from "axios";
@@ -25,16 +25,17 @@ const initialState: AuthenticationState = {
 };
 
 export const login = createAsyncThunk<
-  { token: string },
+  { token: string }, // Résultat réussi: objet avec token
   { email: string; password: string },
   { rejectValue: { message: string } }
 >("auth/login", async ({ email, password }, { rejectWithValue }) => {
   try {
+    // Envoie une requête POST au serveur pour se connecter
     const {
       body: { token },
     } = await api.user.login({ email, password });
 
-    return { token: token };
+    return { token: token }; // Renvoie token en cas d'authentification réussie
   } catch (error) {
     const message =
       (error as AxiosError<ServerError>).response?.data.message || "Error";
@@ -43,12 +44,12 @@ export const login = createAsyncThunk<
   }
 });
 
+export const signOut = createAction("signOut");
+
 export const authenticationSlice = createSlice({
   name: "authentication",
   initialState,
-  reducers: {
-    signOut: () => initialState,
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -65,7 +66,8 @@ export const authenticationSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.error = action.payload?.message;
       });
+    builder.addCase(signOut, () => initialState);
   },
 });
-export const { signOut } = authenticationSlice.actions;
+
 export default authenticationSlice.reducer;

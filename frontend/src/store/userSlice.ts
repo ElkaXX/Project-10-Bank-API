@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
 import { AxiosError } from "axios";
+import { signOut } from "./authSlice";
 
 interface ServerError {
   message: string;
@@ -71,6 +72,7 @@ export const userSlice = createSlice({
       .addCase(getUserProfile.fulfilled, (state, action) => {
         state.firstName = action.payload.firstName;
         state.lastName = action.payload.lastName;
+        state.isLoading = false;
       })
       .addCase(getUserProfile.rejected, (state, action) => {
         state.error = action.payload?.message;
@@ -88,6 +90,8 @@ export const userSlice = createSlice({
       .addCase(editUserProfile.rejected, (state, action) => {
         state.error = action.payload?.message;
       });
+
+    builder.addCase(signOut, () => initialState);
   },
 });
 
